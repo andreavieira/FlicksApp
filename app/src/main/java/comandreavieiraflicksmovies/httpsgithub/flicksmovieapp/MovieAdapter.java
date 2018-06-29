@@ -1,6 +1,7 @@
 package comandreavieiraflicksmovies.httpsgithub.flicksmovieapp;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -61,16 +62,31 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         holder.tvTitle.setText(movie.getTitle());
         holder.tvOverview.setText(movie.getOverview());
 
-        //Build URL for poster image
-        String imageURL = config.getImageUrl(config.getPosterSize(), movie.getPosterPath());
+        //Determine the current orientation
+        boolean isPortrait = context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
 
+        //Build URL for poster image
+        String imageURL = null;
+
+        //If PM, load poster image
+        if (isPortrait) {
+            imageURL = config.getImageUrl(config.getPosterSize(), movie.getPosterPath());
+        }
+        else {
+            //If LM, load backdrop image
+            imageURL = config.getImageUrl(config.getBackdropSize(), movie.getBackdropPath());
+        }
+
+        //Get the correct placeholder and ImageView for the current orientation
+        int placeholderID = isPortrait ? R.drawable.flicks_movie_placeholder : R.drawable.flicks_backdrop_placeholder;
+        ImageView imageView = isPortrait ? holder.ivPosterImage : holder.ivBackdropImage;
         //Load image uRL using Glide
         GlideApp.with(context)
                 .load(imageURL)
                 .transform(new RoundedCornersTransformation(25, 0))
-                .placeholder(R.drawable.flicks_movie_placeholder)
-                .error(R.drawable.flicks_movie_placeholder)
-                .into(holder.ivPosterImage);
+                .placeholder(placeholderID)
+                .error(placeholderID)
+                .into(imageView);
     }
 
     //Returns the total number of items in the list
@@ -83,6 +99,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         //Track view objects
         ImageView ivPosterImage;
+        ImageView ivBackdropImage;
         TextView tvTitle;
         TextView tvOverview;
 
@@ -90,6 +107,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
             super(itemView);
             //Lookup view objects by ID
             ivPosterImage = (ImageView) itemView.findViewById(R.id.ivPosterImage);
+            ivBackdropImage = (ImageView) itemView.findViewById(R.id.ivBackdropImage);
             tvOverview = (TextView) itemView.findViewById(R.id.tvOverview);
             tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
         }
