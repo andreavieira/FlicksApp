@@ -42,5 +42,4 @@ public class Config {
         return backdropSize;
     }
 
-
 }

@@ -2,10 +2,17 @@ package comandreavieiraflicksmovies.httpsgithub.flicksmovieapp.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
+@Parcel
 public class Movie {
     //Values from API
-    private String title, overview, posterPath, backdropPath; //posterPath not full URL only path
+    public String title, overview, posterPath, backdropPath; //posterPath not full URL only path
+    Double voteAverage;
+
+    //No arg
+    public Movie() {
+    }
 
     //Initialize from JSON data
     public Movie(JSONObject object) throws JSONException {
@@ -13,6 +20,7 @@ public class Movie {
         overview = object.getString("overview");
         posterPath = object.getString("poster_path");
         backdropPath = object.getString("backdrop_path");
+        voteAverage = object.getDouble("vote_average");
     }
 
     public String getTitle() {
@@ -29,5 +37,9 @@ public class Movie {
 
     public String getBackdropPath() {
         return backdropPath;
+    }
+
+    public Double getVoteAverage() {
+        return voteAverage;
     }
 }
