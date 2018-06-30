@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import org.parceler.Parcels;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import comandreavieiraflicksmovies.httpsgithub.flicksmovieapp.R;
 
 public class MovieDetailsActivity extends AppCompatActivity {
@@ -15,18 +17,15 @@ public class MovieDetailsActivity extends AppCompatActivity {
     Movie movie;
 
     //The view objects
-    TextView tvTitle;
-    TextView tvOverview;
-    RatingBar rbVoteAverage;
+    @BindView(R.id.tvTitle) TextView tvTitle;
+    @BindView(R.id.tvOverview) TextView tvOverview;
+    @BindView(R.id.rbRating) RatingBar rbRating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
-        //Resolve view objects
-        tvTitle = (TextView) findViewById(R.id.tvTitle);
-        tvOverview = (TextView) findViewById(R.id.tvOverview);
-        rbVoteAverage = (RatingBar) findViewById(R.id.rbRating);
+        ButterKnife.bind(this);
 
         //Unwrap the movie passed in via intent, using its simple name as a key
         movie = (Movie) Parcels.unwrap(getIntent().getParcelableExtra(Movie.class.getSimpleName()));
@@ -38,6 +37,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         //Vote average is 0..10 convert to 0..5 by dividing by 2
         float voteAverage = movie.getVoteAverage().floatValue();
-        rbVoteAverage.setRating(voteAverage = voteAverage > 0 ? voteAverage / 2.0f : voteAverage);
+        rbRating.setRating(voteAverage = voteAverage > 0 ? voteAverage / 2.0f : voteAverage);
     }
 }
